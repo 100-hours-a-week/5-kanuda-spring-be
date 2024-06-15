@@ -1,4 +1,13 @@
 package com.ktb.community.repository;
 
-public class CommentRepository {
+import com.ktb.community.entity.Comment;
+
+import java.util.List;
+
+public interface CommentRepository {
+    List<Comment> findAll(Long postId);
+    Comment findById(Long id);
+    void save(Comment comment);
+    void update(Comment comment);
+    void deleteById(Long id);
 }
