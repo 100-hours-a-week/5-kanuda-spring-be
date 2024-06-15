@@ -1,4 +1,4 @@
-package com.ktb.__kanuda_spring_be;
+package com.ktb.community;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
