@@ -53,4 +53,18 @@ public class UserRepositoryImpl implements UserRepository {
         Integer count = jdbcTemplate.queryForObject(sql, new Object[]{email}, Integer.class);
         return count != null && count > 0;
     }
+
+    @Override
+    public boolean existsByNickname(String nickname) {
+        String sql = "SELECT COUNT(*) FROM users WHERE nickname = ?";
+        Integer count = jdbcTemplate.queryForObject(sql, new Object[]{nickname}, Integer.class);
+        return count != null && count > 0;
+    }
+
+    @Override
+    public boolean existsById(Long id) {
+        String sql = "SELECT COUNT(*) FROM users WHERE id = ?";
+        Integer count = jdbcTemplate.queryForObject(sql, new Object[]{id}, Integer.class);
+        return count != null && count >0;
+    }
 }
