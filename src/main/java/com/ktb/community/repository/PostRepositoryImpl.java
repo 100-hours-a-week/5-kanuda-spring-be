@@ -46,4 +46,11 @@ public class PostRepositoryImpl implements PostRepository {
         String sql = "DELETE FROM posts WHERE id = ?";
         jdbcTemplate.update(sql, id);
     }
+
+    @Override
+    public boolean existsById(Long id) {
+        String sql = "SELECT COUNT(*) FROM posts WHERE id = ?";
+        Integer count = jdbcTemplate.queryForObject(sql, new Object[]{id}, Integer.class);
+        return count != null && count > 0;
+    }
 }
