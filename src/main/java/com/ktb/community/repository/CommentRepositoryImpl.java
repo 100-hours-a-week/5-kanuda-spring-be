@@ -40,4 +40,11 @@ public class CommentRepositoryImpl implements CommentRepository {
         String sql = "DELETE FROM comments WHERE id = ?";
         jdbcTemplate.update(sql, id);
     }
+
+    @Override
+    public boolean existsById(Long id) {
+        String sql = "SELECT COUNT(*) FROM comments WHERE id = ?";
+        Integer count = jdbcTemplate.queryForObject(sql, new Object[]{id}, Integer.class);
+        return count != null && count > 0;
+    }
 }
