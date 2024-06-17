@@ -3,7 +3,9 @@ package com.ktb.community.service;
 import com.ktb.community.entity.User;
 import com.ktb.community.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service
 public class UserService {
     @Autowired
     private UserRepository userRepository;
