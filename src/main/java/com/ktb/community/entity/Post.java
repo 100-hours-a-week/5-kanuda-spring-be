@@ -37,4 +37,6 @@ public class Post {
 
     @Column
     private LocalDateTime time;
+    private String userNickname;
+    private String userImage;
 }

@@ -15,7 +15,19 @@ public class PostRepositoryImpl implements PostRepository {
 
     @Override
     public List<Post> findAll() {
-        String sql = "SELECT * FROM posts";
+        String sql =
+                "SELECT " +
+                    "posts.id as postId, " +
+                    "users.nickname as userNickname, " +
+                    "users.image as userImage, " +
+                    "posts.title, " +
+                    "posts.like_cnt, " +
+                    "posts.comment_cnt, " +
+                    "posts.view_cnt, " +
+                    "posts.time " +
+                "FROM posts " +
+                "INNER JOIN users " +
+                "ON posts.user_id = users.id";
         return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Post.class));
     }
 
