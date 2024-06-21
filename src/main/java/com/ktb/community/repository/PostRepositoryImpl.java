@@ -17,7 +17,7 @@ public class PostRepositoryImpl implements PostRepository {
     public List<Post> findAll() {
         String sql =
                 "SELECT " +
-                    "posts.id as postId, " +
+                    "posts.id, " +
                     "users.nickname as userNickname, " +
                     "users.image as userImage, " +
                     "posts.title, " +
@@ -33,7 +33,22 @@ public class PostRepositoryImpl implements PostRepository {
 
     @Override
     public Post findById(Long id) {
-        String sql = "SELCET * FROM posts WHERE id = ?";
+        String sql =
+                "SELECT " +
+                    "posts.id, " +
+                    "users.nickname as userNickname, " +
+                    "users.image as userImage, " +
+                    "posts.title, " +
+                    "posts.content, " +
+                    "posts.image, " +
+                    "posts.like_cnt, " +
+                    "posts.comment_cnt, " +
+                    "posts.view_cnt, " +
+                    "posts.time " +
+                "FROM posts " +
+                "INNER JOIN users " +
+                "ON posts.user_id = users.id " +
+                "WHERE posts.id = ? ";
         return jdbcTemplate.queryForObject(sql, new Object[]{id}, new BeanPropertyRowMapper<>(Post.class));
     }
 
