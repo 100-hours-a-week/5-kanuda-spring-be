@@ -15,7 +15,21 @@ public class CommentRepositoryImpl implements CommentRepository {
 
     @Override
     public List<Comment> findAll(Long postId) {
-        String sql = "SELECT * FROM comments WHERE post_id = ?";
+        String sql =
+                "SELECT " +
+                    "comments.id, " +
+                    "posts.id as postId, " +
+                    "users.id as userId, " +
+                    "users.nickname as userNickname, " +
+                    "users.image as userImage, " +
+                    "comments.content, " +
+                    "comments.time " +
+                "FROM comments " +
+                "INNER JOIN users " +
+                "ON comments.user_id = users.id " +
+                "INNER JOIN posts " +
+                "ON comments.post_id = posts.id " +
+                "WHERE posts.id = ?";
         return jdbcTemplate.query(sql, new Object[]{postId}, new BeanPropertyRowMapper<>(Comment.class));
     }
 

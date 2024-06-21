@@ -25,4 +25,8 @@ public class Comment {
 
     @Column(nullable = false)
     private LocalDateTime time;
+
+    private String userNickname;
+    private String userImage;
+
 }
