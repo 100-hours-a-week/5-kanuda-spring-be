@@ -5,6 +5,8 @@ import com.ktb.community.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class UserService {
     @Autowired
@@ -41,5 +43,9 @@ public class UserService {
             throw new RuntimeException("User not exist");
         }
         userRepository.deleteById(id);
+    }
+
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
     }
 }
