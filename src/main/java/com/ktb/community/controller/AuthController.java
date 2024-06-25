@@ -1,10 +1,8 @@
 package com.ktb.community.controller;
 
-import com.ktb.community.auth.AuthenticationRequest;
-import com.ktb.community.auth.AuthenticationResponse;
-import com.ktb.community.auth.CustomUserDetailService;
-import com.ktb.community.auth.JwtUtil;
+import com.ktb.community.auth.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,7 +23,11 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthenticationRequest authenticationRequest) throws Exception {
         // 사용자 정보 로드
-        final UserDetails userDetails = customUserDetailService.loadUserByUsername(authenticationRequest.getEmail());
+        UserDetails userDetails = customUserDetailService.loadUserByUsername(authenticationRequest.getEmail());
+
+        if(!userDetails.getPassword().equals(authenticationRequest.getPassword())) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("비밀번호가 올바르지 않습니다.");
+        }
 
         // JWT 생성
         final String jwt = jwtUtil.generateToken(userDetails);
