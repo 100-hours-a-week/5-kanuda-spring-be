@@ -47,7 +47,7 @@ public class JwtUtil {
 
     // 토큰에서 모든 클레임 추출
     private Claims extractAllClaims(String token) {
-        return Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody();
+        return Jwts.parser().setSigningKey(SECRET_KEY.getBytes()).parseClaimsJws(token).getBody();
     }
 
     // 토큰 만료 여부 확인
