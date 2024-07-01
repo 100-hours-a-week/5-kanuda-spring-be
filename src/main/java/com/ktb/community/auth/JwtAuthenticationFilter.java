@@ -1,6 +1,6 @@
 package com.ktb.community.auth;
 
-import com.ktb.community.entity.User;
+import com.ktb.community.domain.entity.User;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

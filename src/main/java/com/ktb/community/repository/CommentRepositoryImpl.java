@@ -1,6 +1,6 @@
 package com.ktb.community.repository;
 
-import com.ktb.community.entity.Comment;
+import com.ktb.community.domain.entity.Comment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;

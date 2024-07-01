@@ -1,6 +1,6 @@
 package com.ktb.community.controller;
 
-import com.ktb.community.entity.User;
+import com.ktb.community.domain.entity.User;
 import com.ktb.community.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

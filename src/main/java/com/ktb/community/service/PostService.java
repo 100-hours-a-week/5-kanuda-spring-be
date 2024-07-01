@@ -1,14 +1,14 @@
 package com.ktb.community.service;
 
-import com.ktb.community.entity.Comment;
-import com.ktb.community.entity.Post;
+import com.ktb.community.domain.dto.PostDTO;
+import com.ktb.community.domain.entity.Comment;
+import com.ktb.community.domain.entity.Post;
 import com.ktb.community.repository.CommentRepository;
 import com.ktb.community.repository.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class PostService {
@@ -17,8 +17,8 @@ public class PostService {
     @Autowired
     CommentRepository commentRepository;
 
-    public List<Post> getAllPosts() {
-        return postRepository.findAll();
+    public List<PostDTO> getAllPosts() {
+        return postRepository.findAllPost();
     }
 
     public Post getPostById(Long id) {

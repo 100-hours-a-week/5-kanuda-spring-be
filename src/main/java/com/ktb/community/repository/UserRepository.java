@@ -1,6 +1,6 @@
 package com.ktb.community.repository;
 
-import com.ktb.community.entity.User;
+import com.ktb.community.domain.entity.User;
 
 import java.util.List;
 

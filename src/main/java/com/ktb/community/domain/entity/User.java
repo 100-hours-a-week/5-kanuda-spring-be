@@ -1,4 +1,4 @@
-package com.ktb.community.entity;
+package com.ktb.community.domain.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -6,11 +6,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "users")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,4 +31,7 @@ public class User {
 
     @Column
     private String image;
+
+    @OneToMany(mappedBy = "user")
+    private List<Post> posts;
 }
