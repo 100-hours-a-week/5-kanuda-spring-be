@@ -21,11 +21,12 @@ public class PostService {
         return postRepository.findAllPost();
     }
 
-    public Post getPostById(Long id) {
+    public PostDTO getPostById(Long id) {
         if(!postRepository.existsById(id)) {
             throw new RuntimeException("Post not exist");
         }
-        return postRepository.findById(id).orElseThrow();
+        Post post = postRepository.findById(id).orElseThrow();
+        return PostDTO.toDto(post);
     }
 
     public void createPost(Post post) {
