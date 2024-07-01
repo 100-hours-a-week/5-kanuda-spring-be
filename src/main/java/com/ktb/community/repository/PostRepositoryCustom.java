@@ -7,5 +7,8 @@ import java.util.List;
 
 public interface PostRepositoryCustom {
     List<PostDTO> findAllPost();
+
+    PostDTO findPostById(Long id);
+
     public void update(Post post);
 }

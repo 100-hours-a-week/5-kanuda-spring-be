@@ -4,7 +4,6 @@ import com.ktb.community.domain.dto.PostDTO;
 import com.ktb.community.domain.dto.QPostDTO;
 import com.ktb.community.domain.entity.Post;
 import com.ktb.community.domain.entity.QPost;
-import com.ktb.community.domain.entity.QUser;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -31,6 +30,19 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
                 .from(post)
                 .join(post.user, user)
                 .fetch();
+    }
+
+    @Override
+    public PostDTO findPostById(Long id) {
+        return jpaQueryFactory
+                .select(new QPostDTO(post.id, post.userId, post.title,
+                        post.content, post.image, post.viewCnt,
+                        post.likeCnt, post.commentCnt, post.time,
+                        user.nickname, user.image))
+                .from(post)
+                .join(post.user, user)
+                .where(post.id.eq(id))
+                .fetchOne();
     }
 
     @Override

@@ -25,8 +25,7 @@ public class PostService {
         if(!postRepository.existsById(id)) {
             throw new RuntimeException("Post not exist");
         }
-        Post post = postRepository.findById(id).orElseThrow();
-        return PostDTO.toDto(post);
+        return postRepository.findPostById(id);
     }
 
     public void createPost(Post post) {
