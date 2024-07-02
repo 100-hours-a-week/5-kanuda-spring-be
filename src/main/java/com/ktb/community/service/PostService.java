@@ -3,8 +3,11 @@ package com.ktb.community.service;
 import com.ktb.community.domain.dto.PostDTO;
 import com.ktb.community.domain.entity.Comment;
 import com.ktb.community.domain.entity.Post;
+import com.ktb.community.domain.entity.User;
 import com.ktb.community.repository.CommentRepository;
 import com.ktb.community.repository.PostRepository;
+import com.ktb.community.repository.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +17,8 @@ import java.util.List;
 public class PostService {
     @Autowired
     PostRepository postRepository;
+    @Autowired
+    UserRepository userRepository;
     @Autowired
     CommentRepository commentRepository;
 
@@ -28,8 +33,13 @@ public class PostService {
         return postRepository.findPostById(id);
     }
 
-    public void createPost(Post post) {
-        postRepository.save(post);
+    public void createPost(PostDTO postDTO, String userEmail) {
+        User user = userRepository.findByEmail(userEmail);
+        if(user == null) {
+            throw new EntityNotFoundException("User not found");
+        }
+        postDTO.setUserId(user.getId());
+        postRepository.save(postDTO.toEntity());
     }
 
     public void updatePost(Post post) {

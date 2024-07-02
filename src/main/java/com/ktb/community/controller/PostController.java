@@ -1,5 +1,6 @@
 package com.ktb.community.controller;
 
+import com.ktb.community.auth.CustomUserDetails;
 import com.ktb.community.domain.dto.PostDTO;
 import com.ktb.community.domain.entity.Comment;
 import com.ktb.community.domain.entity.Post;
@@ -7,9 +8,9 @@ import com.ktb.community.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -19,9 +20,10 @@ public class PostController {
     private PostService postService;
 
     @PostMapping("/register")
-    public ResponseEntity<String> registerPost(@RequestBody Post post) {
+    public ResponseEntity<String> registerPost(@ModelAttribute PostDTO postDTO, @AuthenticationPrincipal CustomUserDetails userDetails) {
         try {
-            postService.createPost(post);
+            String userEmail = userDetails.getUsername();
+            postService.createPost(postDTO, userEmail);
             return new ResponseEntity<>("Post registered successfully", HttpStatus.CREATED);
         } catch (RuntimeException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
