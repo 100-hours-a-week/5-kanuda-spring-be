@@ -67,6 +67,20 @@ public class PostController {
         }
     }
 
+    @GetMapping("/check-writer/post/{postId}")
+    public ResponseEntity<String> checkPostWriter(@PathVariable Long postId, @AuthenticationPrincipal CustomUserDetails userDetails) {
+        try {
+            String userEmail = userDetails.getUsername();
+            if(postService.checkPostWriter(postId, userEmail)) {
+                return new ResponseEntity<>("same user", HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>("작성자가 아니면 권한이 없습니다.", HttpStatus.NOT_FOUND);
+            }
+        } catch (RuntimeException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
     // comment
     @PostMapping("/{postId}/comments")
     public ResponseEntity<String> createComment(@PathVariable Long postId, @RequestBody Comment comment) {

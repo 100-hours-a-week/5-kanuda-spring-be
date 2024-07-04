@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class PostService {
@@ -74,5 +75,16 @@ public class PostService {
 
     public void deleteComment(Long id) {
         commentRepository.deleteById(id);
+    }
+
+    public boolean checkPostWriter(Long postId, String userEmail) {
+        User writer = userRepository.findByEmail(userEmail);
+        PostDTO post = postRepository.findPostById(postId);
+
+        if(Objects.equals(post.getUserId(), writer.getId())) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }
