@@ -1,4 +1,4 @@
-package com.ktb.community.repository;
+package com.ktb.community.repository.user;
 
 import com.ktb.community.domain.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,4 +1,4 @@
-package com.ktb.community.repository;
+package com.ktb.community.repository.post;
 
 import com.ktb.community.domain.dto.PostDTO;
 import com.ktb.community.domain.dto.QPostDTO;

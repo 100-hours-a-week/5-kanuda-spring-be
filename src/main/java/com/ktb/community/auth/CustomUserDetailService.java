@@ -1,7 +1,7 @@
 package com.ktb.community.auth;
 
 import com.ktb.community.domain.entity.User;
-import com.ktb.community.repository.UserRepository;
+import com.ktb.community.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

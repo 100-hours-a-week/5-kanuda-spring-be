@@ -1,4 +1,4 @@
-package com.ktb.community.repository;
+package com.ktb.community.repository.comment;
 
 import com.ktb.community.domain.dto.CommentDto;
 import com.ktb.community.domain.entity.Comment;
