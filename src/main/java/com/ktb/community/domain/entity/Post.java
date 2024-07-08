@@ -40,8 +40,6 @@ public class Post {
     @Column
     private LocalDateTime time;
 
-//    private String userNickname;
-//    private String userImage;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", referencedColumnName = "id", insertable = false, updatable = false)
     private User user;

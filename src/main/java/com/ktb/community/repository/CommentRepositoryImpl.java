@@ -1,66 +1,53 @@
 package com.ktb.community.repository;
 
+import com.ktb.community.domain.dto.CommentDto;
+import com.ktb.community.domain.dto.QCommentDto;
 import com.ktb.community.domain.entity.Comment;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.JdbcTemplate;
+import com.ktb.community.domain.entity.QComment;
+import com.querydsl.jpa.impl.JPAQueryFactory;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+import static com.ktb.community.domain.entity.QComment.comment;
+import static com.ktb.community.domain.entity.QUser.user;
+
 @Repository
-public class CommentRepositoryImpl implements CommentRepository {
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
+@RequiredArgsConstructor
+public class CommentRepositoryImpl implements CommentRepositoryCustom {
+
+    private final JPAQueryFactory jpaQueryFactory;
+    private final QComment qComment = comment;
 
     @Override
-    public List<Comment> findAll(Long postId) {
-        String sql =
-                "SELECT " +
-                    "comments.id, " +
-                    "posts.id as postId, " +
-                    "users.id as userId, " +
-                    "users.nickname as userNickname, " +
-                    "users.image as userImage, " +
-                    "comments.content, " +
-                    "comments.time " +
-                "FROM comments " +
-                "INNER JOIN users " +
-                "ON comments.user_id = users.id " +
-                "INNER JOIN posts " +
-                "ON comments.post_id = posts.id " +
-                "WHERE posts.id = ?";
-        return jdbcTemplate.query(sql, new Object[]{postId}, new BeanPropertyRowMapper<>(Comment.class));
+    public List<CommentDto> findAllComment(Long postId) {
+        return jpaQueryFactory
+                .select(new QCommentDto(
+                        comment.id, comment.postId, comment.userId,
+                        comment.content, comment.time,
+                        user.nickname, user.image))
+                .from(comment)
+                .join(comment.user, user)
+                .fetch();
     }
 
     @Override
-    public Comment findById(Long id) {
-        String sql = "SELECT * FROM comments WHERE id = ?";
-        return jdbcTemplate.queryForObject(sql, new Object[]{id}, new BeanPropertyRowMapper<>(Comment.class));
-    }
-
-    @Override
-    public void save(Comment comment) {
-        String sql = "INSERT INTO comments (post_id, user_id, content, time) VALUES (?, ?, ?, ?)";
-        jdbcTemplate.update(sql, comment.getPostId(), comment.getUserId(), comment.getContent(), comment.getTime());
+    public CommentDto findCommentById(Long commentId) {
+        return jpaQueryFactory
+                .select(new QCommentDto(comment.id, comment.postId, comment.userId,
+                        comment.content, comment.time, user.nickname, user.image))
+                .from(comment)
+                .join(comment.user, user)
+                .where(comment.id.eq(commentId))
+                .fetchOne();
     }
 
     @Override
     public void update(Comment comment) {
-        String sql = "UPDATE comments SET content = ? WHERE id = ?";
-        jdbcTemplate.update(sql, comment.getContent(), comment.getId());
-    }
-
-    @Override
-    public void deleteById(Long id) {
-        String sql = "DELETE FROM comments WHERE id = ?";
-        jdbcTemplate.update(sql, id);
-    }
-
-    @Override
-    public boolean existsById(Long id) {
-        String sql = "SELECT COUNT(*) FROM comments WHERE id = ?";
-        Integer count = jdbcTemplate.queryForObject(sql, new Object[]{id}, Integer.class);
-        return count != null && count > 0;
+        jpaQueryFactory.update(QComment.comment)
+                .set(qComment.content, comment.getContent())
+                .where(qComment.id.eq(comment.getId()))
+                .execute();
     }
 }

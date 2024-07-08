@@ -1,9 +1,9 @@
 package com.ktb.community.controller;
 
 import com.ktb.community.auth.CustomUserDetails;
+import com.ktb.community.domain.dto.CommentDto;
 import com.ktb.community.domain.dto.PostDTO;
 import com.ktb.community.domain.entity.Comment;
-import com.ktb.community.domain.entity.Post;
 import com.ktb.community.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -47,10 +47,10 @@ public class PostController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<String> updatePost(@PathVariable Long id, @RequestBody Post post) {
+    public ResponseEntity<String> updatePost(@PathVariable Long id, @ModelAttribute PostDTO postDTO, @AuthenticationPrincipal CustomUserDetails userDetails) {
         try {
-            post.setId(id);
-            postService.updatePost(post);
+            postDTO.setId(id);
+            postService.updatePost(postDTO);
             return new ResponseEntity<>("Post updated successfully", HttpStatus.OK);
         } catch (RuntimeException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
@@ -81,32 +81,38 @@ public class PostController {
         }
     }
 
-    // comment
-    @PostMapping("/{postId}/comments")
-    public ResponseEntity<String> createComment(@PathVariable Long postId, @RequestBody Comment comment) {
+    @GetMapping("/check-writer/comment/{commentId}")
+    public ResponseEntity<String> checkCommentWriter(@PathVariable Long commentId, @AuthenticationPrincipal CustomUserDetails userDetails) {
         try {
-            comment.setPostId(postId);
-            postService.createComment(comment);
+            String userEmail = userDetails.getUsername();
+            if(postService.checkCommentWriter(commentId, userEmail)) {
+                return new ResponseEntity<>("same user", HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>("작성자가 아니면 권한이 없습니다.", HttpStatus.NOT_FOUND);
+            }
+        } catch (RuntimeException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    // comment
+    @PostMapping("/comments/{postId}")
+    public ResponseEntity<String> createComment(@PathVariable Long postId, @RequestBody CommentDto commentDto, @AuthenticationPrincipal CustomUserDetails userDetails) {
+        try {
+            System.out.println(commentDto);
+            String userEmail = userDetails.getUsername();
+            commentDto.setPostId(postId);
+            postService.createComment(commentDto, userEmail);
             return new ResponseEntity<>("Comment created successfully", HttpStatus.CREATED);
         } catch (RuntimeException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
-    @GetMapping("/{postId}/comments")
-    public ResponseEntity<List<Comment>> getCommentsByPostId(@PathVariable Long postId) {
-        List<Comment> comments = postService.getCommentsByPostId(postId);
+    @GetMapping("/comments/{postId}")
+    public ResponseEntity<List<CommentDto>> getCommentsByPostId(@PathVariable Long postId) {
+        List<CommentDto> comments = postService.getCommentsByPostId(postId);
         return new ResponseEntity<>(comments, HttpStatus.OK);
-    }
-
-    @GetMapping("/comments/{commentId}")
-    public ResponseEntity<Comment> getCommentById(@PathVariable Long commentId) {
-        try {
-            Comment comment = postService.getCommentById(commentId);
-            return new ResponseEntity<>(comment, HttpStatus.OK);
-        } catch (RuntimeException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
     }
 
     @PutMapping("/comments/{commentId}")
